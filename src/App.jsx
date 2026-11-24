@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const games = [
   { id: "tic-tac-toe", icon: "⭕", name: "Tic-Tac-Toe", tag: "2 players", color: "mint" },
@@ -204,8 +204,96 @@ function RockPaperScissors() {
   );
 }
 
+function ParticleFX({ level, paused }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const context = canvas.getContext("2d", { alpha: true });
+    if (!context) return undefined;
+
+    let width = 0;
+    let height = 0;
+    let animationFrame = 0;
+    let particles = [];
+    let stopped = paused;
+
+    const particleCounts = [180, 420, 760];
+    const colors = ["#8c4dff", "#ff72b6", "#12c9bd", "#ffc96a"];
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.width = Math.floor(width * pixelRatio);
+      canvas.height = Math.floor(height * pixelRatio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+      particles = Array.from({ length: particleCounts[level - 1] }, (_, index) => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * (0.45 + level * 0.12),
+        vy: (Math.random() - 0.5) * (0.45 + level * 0.12),
+        radius: 1.2 + Math.random() * (1.5 + level * 0.5),
+        phase: Math.random() * Math.PI * 2,
+        color: colors[index % colors.length],
+      }));
+    }
+
+    function draw(time) {
+      if (stopped) return;
+      context.clearRect(0, 0, width, height);
+      context.globalCompositeOperation = "lighter";
+
+      for (let index = 0; index < particles.length; index += 1) {
+        const particle = particles[index];
+        particle.phase += 0.018 + level * 0.003;
+        particle.x += particle.vx + Math.sin(particle.phase) * 0.08 * level;
+        particle.y += particle.vy + Math.cos(particle.phase * 0.7) * 0.08 * level;
+
+        if (particle.x < -20) particle.x = width + 20;
+        if (particle.x > width + 20) particle.x = -20;
+        if (particle.y < -20) particle.y = height + 20;
+        if (particle.y > height + 20) particle.y = -20;
+
+        context.beginPath();
+        context.fillStyle = particle.color;
+        context.shadowColor = particle.color;
+        context.shadowBlur = level * 5;
+        context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+        context.fill();
+      }
+
+      context.shadowBlur = 0;
+      context.globalCompositeOperation = "source-over";
+      animationFrame = window.requestAnimationFrame(draw);
+    }
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    if (!paused) {
+      stopped = false;
+      animationFrame = window.requestAnimationFrame(draw);
+    }
+
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener("resize", resize);
+    };
+  }, [level, paused]);
+
+  return <canvas ref={canvasRef} className={`particle-fx fx-level-${level}${paused ? " fx-paused" : ""}`} aria-hidden="true" />;
+}
+
 export default function App() {
   const [activeGame, setActiveGame] = useState(games[0].id);
+  const [fxLevel, setFxLevel] = useState(2);
+  const [fxPaused, setFxPaused] = useState(false);
   const currentGame = games.find((game) => game.id === activeGame);
   const descriptions = {
     "tic-tac-toe": "Challenge a friend to the classic three-in-a-row.",
@@ -215,6 +303,7 @@ export default function App() {
 
   return (
     <main className="arcade">
+      <ParticleFX level={fxLevel} paused={fxPaused} />
       <div className="ambient ambient-one" aria-hidden="true" />
       <div className="ambient ambient-two" aria-hidden="true" />
       <div className="sparkle sparkle-one" aria-hidden="true">✦</div>
@@ -225,7 +314,25 @@ export default function App() {
           <span className="brand-icon" aria-hidden="true">✦</span>
           <span>PIXEL<span className="brand-highlight">POP</span></span>
         </div>
-        <span className="online-badge"><span /> MINI ARCADE</span>
+        <div className="performance-controls" aria-label="Visual effects controls">
+          <button
+            className="fx-toggle"
+            type="button"
+            onClick={() => setFxPaused((paused) => !paused)}
+            aria-pressed={!fxPaused}
+            title={fxPaused ? "Resume visual effects" : "Pause visual effects"}
+          >
+            {fxPaused ? "FX off" : "FX on"}
+          </button>
+          <label className="fx-level">
+            <span>FX</span>
+            <select value={fxLevel} onChange={(event) => setFxLevel(Number(event.target.value))} disabled={fxPaused}>
+              <option value={1}>Low</option>
+              <option value={2}>High</option>
+              <option value={3}>Ultra</option>
+            </select>
+          </label>
+        </div>
       </header>
 
       <section className="welcome">
