@@ -1,6 +1,6 @@
 # PixelPop Mini Arcade
 
-A colorful, animated mini-game collection built with React and Vite: Tic-Tac-Toe, Memory Match, and Rock Paper Scissors.
+A lightweight mini-game collection built with React and Vite: Tic-Tac-Toe, Memory Match, and Rock Paper Scissors. The artwork is drawn with inline SVG shapes, so the app does not depend on emoji rendering or remote image assets. Decorative backgrounds are static and do not run a continuous particle animation.
 
 ## Run locally
 

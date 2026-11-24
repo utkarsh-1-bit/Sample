@@ -43,21 +43,6 @@ button:focus-visible {
   padding: 27px 30px 20px;
 }
 
-.particle-fx {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0.72;
-  transition: opacity 180ms ease;
-}
-
-.particle-fx.fx-paused {
-  opacity: 0;
-}
-
 .ambient {
   position: fixed;
   z-index: -1;
@@ -67,7 +52,6 @@ button:focus-visible {
   filter: blur(85px);
   opacity: 0.36;
   pointer-events: none;
-  animation: drift 9s ease-in-out infinite alternate;
 }
 
 .ambient-one {
@@ -80,89 +64,40 @@ button:focus-visible {
   right: -100px;
   bottom: 8%;
   background: #12c9bd;
-  animation-delay: -4s;
 }
 
-.sparkle {
+.shape {
   position: fixed;
   z-index: -1;
-  color: #f7c95b;
-  animation: twinkle 2.4s ease-in-out infinite;
+  width: 68px;
+  height: 68px;
   pointer-events: none;
+  opacity: 0.42;
 }
 
-.sparkle-one {
+.shape svg {
+  width: 100%;
+  height: 100%;
+}
+
+.shape-one {
   top: 24%;
   left: 7%;
-  font-size: 30px;
+  transform: rotate(-12deg);
 }
 
-.sparkle-two {
+.shape-two {
   right: 8%;
   bottom: 24%;
-  color: #ff72b6;
-  font-size: 42px;
-  animation-delay: -1s;
+  width: 82px;
+  height: 82px;
+  transform: rotate(12deg);
 }
 
 .topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.performance-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.fx-toggle,
-.fx-level {
-  min-height: 34px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  background: rgba(22, 18, 42, 0.78);
-  color: #e9e4f8;
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  backdrop-filter: blur(10px);
-}
-
-.fx-toggle {
-  padding: 0 12px;
-  cursor: pointer;
-}
-
-.fx-toggle[aria-pressed="true"] {
-  border-color: rgba(18, 201, 189, 0.5);
-  color: #83eee5;
-  box-shadow: 0 0 18px rgba(18, 201, 189, 0.12);
-}
-
-.fx-level {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0 7px 0 10px;
-}
-
-.fx-level select {
-  height: 26px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: #fff;
-  outline: none;
-  font: inherit;
-  cursor: pointer;
-}
-
-.fx-level select:disabled {
-  cursor: default;
-  opacity: 0.45;
 }
 
 .brand {
@@ -180,12 +115,16 @@ button:focus-visible {
   display: grid;
   width: 31px;
   height: 31px;
+  padding: 3px;
   place-items: center;
   border-radius: 10px;
   background: linear-gradient(145deg, #ff73bb, #ffad68);
-  color: #28143d;
-  font-size: 1.1rem;
   box-shadow: 0 5px 18px rgba(255, 115, 187, 0.27);
+}
+
+.brand-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .brand-highlight {
@@ -232,8 +171,12 @@ button:focus-visible {
   letter-spacing: 0.18em;
 }
 
-.eyebrow span {
-  font-size: 1rem;
+.eyebrow-shape {
+  width: 9px;
+  height: 9px;
+  border: 2px solid #ffc96a;
+  border-radius: 3px;
+  transform: rotate(45deg);
 }
 
 h1,
@@ -319,8 +262,12 @@ p {
   place-items: center;
   border-radius: 13px;
   background: color-mix(in srgb, var(--tab-color) 17%, white);
-  font-size: 1.45rem;
   transition: transform 180ms ease;
+}
+
+.tab-icon svg {
+  width: 32px;
+  height: 32px;
 }
 
 .game-tab:hover .tab-icon {
@@ -441,8 +388,12 @@ p {
   border: 1px solid rgba(47, 34, 79, 0.06);
   border-radius: 18px;
   background: color-mix(in srgb, var(--accent) 14%, white);
-  font-size: 1.85rem;
-  animation: bob 3s ease-in-out infinite;
+  padding: 7px;
+}
+
+.game-sticker svg {
+  width: 100%;
+  height: 100%;
 }
 
 .game-content {
@@ -588,13 +539,25 @@ p {
   background: linear-gradient(145deg, #f8c5e1, #ed9dcc);
   color: white;
   cursor: pointer;
-  font-size: clamp(1.3rem, 7vw, 2rem);
   box-shadow: 0 4px 0 #db7eb2;
   transition: transform 160ms ease, background 180ms ease, box-shadow 160ms ease;
 }
 
 .memory-card:not(:disabled):hover {
   transform: translateY(-3px) rotate(-3deg);
+}
+
+.memory-artwork {
+  width: 72%;
+  height: 72%;
+}
+
+.card-back-shape {
+  width: 30%;
+  aspect-ratio: 1;
+  border: 3px solid rgba(255, 255, 255, 0.86);
+  border-radius: 6px;
+  transform: rotate(45deg);
 }
 
 .memory-card > span {
@@ -672,11 +635,10 @@ p {
   font-weight: 700;
 }
 
-.duel-emoji {
+.duel-artwork {
   display: block;
-  min-height: 47px;
-  font-size: 2.6rem;
-  animation: hand-bounce 550ms ease both;
+  width: 52px;
+  height: 52px;
 }
 
 .versus {
@@ -716,8 +678,9 @@ p {
   transition: transform 150ms ease, background 150ms ease;
 }
 
-.choice-button span {
-  font-size: 1.8rem;
+.choice-artwork {
+  width: 39px;
+  height: 39px;
 }
 
 .choice-button:hover {
@@ -750,9 +713,14 @@ p {
   text-align: center;
 }
 
-.page-footer span {
+.footer-shape {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
   margin-left: 4px;
-  color: #ffc96a;
+  border-radius: 2px;
+  background: #ffc96a;
+  transform: rotate(45deg);
 }
 
 @keyframes arrive {
@@ -763,20 +731,6 @@ p {
 @keyframes card-in {
   from { opacity: 0; transform: translateY(9px) scale(0.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes drift {
-  to { transform: translate(35px, -25px) scale(1.15); }
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: 0.5; transform: scale(0.85) rotate(-12deg); }
-  50% { opacity: 1; transform: scale(1.2) rotate(12deg); }
-}
-
-@keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(0); }
-  50% { transform: translateY(-4px) rotate(4deg); }
 }
 
 @keyframes mark-in {
@@ -799,12 +753,6 @@ p {
   0% { transform: scale(0.9); }
   65% { transform: scale(1.08); }
   100% { transform: scale(1); }
-}
-
-@keyframes hand-bounce {
-  0% { transform: translateY(5px) scale(0.8); }
-  65% { transform: translateY(-3px) scale(1.1); }
-  100% { transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 700px) {
@@ -840,11 +788,11 @@ p {
     padding: 21px 19px 22px;
   }
 
-  .sparkle-one {
+  .shape-one {
     left: 2%;
   }
 
-  .sparkle-two {
+  .shape-two {
     right: 3%;
   }
 }
