@@ -1,6 +1,6 @@
-# Tic-Tac-Toe
+# PixelPop Mini Arcade
 
-A responsive, two-player Tic-Tac-Toe game built with React and Vite.
+A colorful, animated mini-game collection built with React and Vite: Tic-Tac-Toe, Memory Match, and Rock Paper Scissors.
 
 ## Run locally
 
